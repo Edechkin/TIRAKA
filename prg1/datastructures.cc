@@ -47,7 +47,11 @@ void Datastructures::clear_all()
 
 std::vector<PlaceID> Datastructures::all_places()
 {
-    //return everyPlaceId_;
+    std::vector<PlaceID> places = {};
+    for (const auto& id : places_){
+        places.push_back(id.first);
+    }
+    return places;
 }
 
 bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coord xy)
@@ -63,18 +67,22 @@ bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coo
 
 std::pair<Name, PlaceType> Datastructures::get_place_name_type(PlaceID id)
 {
-    /*if (places_.find(id) != places_.end()) {
-        return {places_.at(id).name, places_.at(id).type};
-    }
-    else {*/
+    if (places_.find(id) == places_.end()) {
         return {NO_NAME, PlaceType::NO_TYPE};
-    //}
+    }
+    else {
+        return {places_.at(id).name, places_.at(id).type };
+    }
 }
 
 Coord Datastructures::get_place_coord(PlaceID id)
 {
-    // Replace this comment with your implementation
-    return NO_COORD;
+    if (places_.find(id) == places_.end()) {
+        return { NO_COORD};
+    }
+    else {
+        return {places_.at(id).xy };
+    }
 }
 
 bool Datastructures::add_area(AreaID id, const Name &name, std::vector<Coord> coords)

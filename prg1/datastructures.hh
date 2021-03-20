@@ -185,9 +185,9 @@ public:
 private:
     // Add stuff needed for your class implementation here
     struct place{
-        Name const& name;
-        PlaceType type;
-        Coord xy;
+        Name const name;
+        PlaceType const type;
+        Coord const xy;
     };
     std::unordered_map<PlaceID, struct place> places_;
     //std::vector<PlaceID> everyPlaceId_;
