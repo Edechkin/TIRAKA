@@ -6,6 +6,8 @@
 
 #include <cmath>
 
+#include <iostream>
+
 std::minstd_rand rand_engine; // Reasonably quick pseudo-random generator
 
 template <typename Type>
@@ -113,8 +115,18 @@ void Datastructures::creation_finished()
 
 std::vector<PlaceID> Datastructures::places_alphabetically()
 {
-    // Replace this comment with your implementation
+    //std::pair<PlaceID, Name> vittu;
+    std::vector<std::pair<PlaceID, Name>> support = {};
+    std::vector<PlaceID> alphabetical_order = {};
+    if (places_.empty()){
     return {};
+    }
+    for (auto& id : places_){
+        //vittu = std::make_pair(id, id.second.name);
+        //std::pair<PlaceID, Name> vittu (id, id.second.name);
+        //std::cout << id.first << std::endl;
+        //support.push_back(vittu);
+    }
 }
 
 std::vector<PlaceID> Datastructures::places_coord_order()
@@ -125,26 +137,46 @@ std::vector<PlaceID> Datastructures::places_coord_order()
 
 std::vector<PlaceID> Datastructures::find_places_name(Name const& name)
 {
-    // Replace this comment with your implementation
-    return {};
+    std::vector<PlaceID> places_with_names = {};
+    for (auto& id : places_){
+        if (id.second.name == name){
+            places_with_names.push_back(id.first);
+        }
+    }
+    return places_with_names;
 }
 
 std::vector<PlaceID> Datastructures::find_places_type(PlaceType type)
 {
-    // Replace this comment with your implementation
-    return {};
+    std::vector<PlaceID> places_with_types = {};
+    for (auto& id : places_){
+        if (id.second.type == type){
+            places_with_types.push_back(id.first);
+        }
+    }
+    return places_with_types;
 }
 
 bool Datastructures::change_place_name(PlaceID id, const Name& newname)
 {
-    // Replace this comment with your implementation
-    return false;
+    if (places_.find(id) == places_.end()) {
+        return false;
+    }
+    else {
+        places_.at(id).name = newname;
+        return true;
+    }
 }
 
 bool Datastructures::change_place_coord(PlaceID id, Coord newcoord)
 {
-    // Replace this comment with your implementation
-    return false;
+    if (places_.find(id) == places_.end()) {
+        return false;
+    }
+    else {
+        places_.at(id).xy = newcoord;
+        return true;
+    }
 }
 
 std::vector<AreaID> Datastructures::all_areas()
