@@ -191,6 +191,14 @@ private:
     };
     std::unordered_map<PlaceID, struct place> places_;
     //std::vector<PlaceID> everyPlaceId_;
+    struct area{
+        Name name;
+        std::vector<Coord> coords;
+        std::vector<PlaceID*> sub_areas;
+        std::vector<PlaceID*> super_areas;
+
+    };
+    std::unordered_map<PlaceID, struct area> areas_;
 
 };
 

@@ -89,20 +89,33 @@ Coord Datastructures::get_place_coord(PlaceID id)
 
 bool Datastructures::add_area(AreaID id, const Name &name, std::vector<Coord> coords)
 {
-    // Replace this comment with your implementation
+
+    if (areas_.find(id) == areas_.end()) {
+        area new_area = {name, coords, {}, {}};
+        areas_.insert({id, new_area});
+        return true;
+    }
     return false;
 }
 
 Name Datastructures::get_area_name(AreaID id)
 {
-    // Replace this comment with your implementation
-    return NO_NAME;
+    if (areas_.find(id) == areas_.end()) {
+        return {NO_NAME};
+    }
+    else {
+        return {areas_.at(id).name};
+    }
 }
 
 std::vector<Coord> Datastructures::get_area_coords(AreaID id)
 {
-    // Replace this comment with your implementation
-    return {NO_COORD};
+    if (areas_.find(id) == areas_.end()) {
+        return {NO_COORD};
+    }
+    else {
+        return {areas_.at(id).coords};
+    }
 }
 
 void Datastructures::creation_finished()
