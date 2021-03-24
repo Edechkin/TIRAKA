@@ -11,8 +11,8 @@
 #include <functional>
 
 // Types for IDs
-using PlaceID = long int;
-using AreaID = long int;
+using PlaceID = long long int;
+using AreaID = long long int;
 using Name = std::string;
 using WayID = std::string;
 
@@ -194,11 +194,15 @@ private:
     struct area{
         Name name;
         std::vector<Coord> coords;
-        std::vector<PlaceID*> sub_areas;
-        std::vector<PlaceID*> super_areas;
+        std::vector<AreaID> sub_areas = {};
+        AreaID super_area = NO_AREA;
 
     };
-    std::unordered_map<PlaceID, struct area> areas_;
+    std::unordered_map<AreaID, struct area> areas_;
+
+    std::vector<AreaID> recursive_sub_area_in_areas(AreaID, std::vector<AreaID>&);
+
+    std::vector<AreaID> super_areas_;
 
 };
 

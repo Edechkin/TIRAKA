@@ -8,6 +8,7 @@
 
 #include <iostream>
 
+
 std::minstd_rand rand_engine; // Reasonably quick pseudo-random generator
 
 template <typename Type>
@@ -91,7 +92,7 @@ bool Datastructures::add_area(AreaID id, const Name &name, std::vector<Coord> co
 {
 
     if (areas_.find(id) == areas_.end()) {
-        area new_area = {name, coords, {}, {}};
+        area new_area = {name, coords, {}, NO_AREA};
         areas_.insert({id, new_area});
         return true;
     }
@@ -194,20 +195,40 @@ bool Datastructures::change_place_coord(PlaceID id, Coord newcoord)
 
 std::vector<AreaID> Datastructures::all_areas()
 {
-    // Replace this comment with your implementation
-    return {};
+    std::vector<AreaID> areas = {};
+    for (const auto& id : areas_){
+        areas.push_back(id.first);
+    }
+    return areas;
 }
 
 bool Datastructures::add_subarea_to_area(AreaID id, AreaID parentid)
 {
-    // Replace this comment with your implementation
-    return false;
+    if (areas_.find(id) == areas_.end() || areas_.find(parentid) == areas_.end()) {
+        return false;
+    }
+    else if (areas_.at(id).super_area != NO_AREA) {
+        return false;
+    }
+    else {
+        AreaID superareaID = parentid;
+        areas_.at(id).super_area = superareaID;
+        AreaID subareaID = id;
+        areas_.at(parentid).sub_areas.push_back(subareaID);
+        return true;
+    }
 }
 
 std::vector<AreaID> Datastructures::subarea_in_areas(AreaID id)
 {
-    // Replace this comment with your implementation
-    return {NO_AREA};
+    if (areas_.at(id).super_area == NO_AREA) {
+        return {NO_AREA};
+    }
+    else {
+        super_areas_ = {};
+        recursive_sub_area_in_areas(id, super_areas_);
+        return super_areas_;
+    }
 }
 
 std::vector<PlaceID> Datastructures::places_closest_to(Coord xy, PlaceType type)
@@ -232,4 +253,18 @@ AreaID Datastructures::common_area_of_subareas(AreaID id1, AreaID id2)
 {
     // Replace this comment with your implementation
     return NO_AREA;
+}
+
+std::vector<AreaID> Datastructures::recursive_sub_area_in_areas(AreaID id, std::vector<AreaID> &superareas)
+{
+
+
+    if (areas_.at(id).super_area == NO_AREA) {
+        return superareas;
+    }
+    else {
+        AreaID ptr = areas_.at(id).super_area;
+        superareas.push_back(ptr);
+        return recursive_sub_area_in_areas(ptr, superareas);
+    }
 }
