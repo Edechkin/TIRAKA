@@ -9,6 +9,7 @@
 #include <utility>
 #include <limits>
 #include <functional>
+#include <map>
 
 // Types for IDs
 using PlaceID = long long int;
@@ -188,6 +189,7 @@ private:
         Name name;
         PlaceType type;
         Coord xy;
+        PlaceID id;
     };
     std::unordered_map<PlaceID, struct place> places_;
     //std::vector<PlaceID> everyPlaceId_;
@@ -203,6 +205,8 @@ private:
     std::vector<AreaID> recursive_sub_area_in_areas(AreaID, std::vector<AreaID>&);
 
     std::vector<AreaID> super_areas_;
+
+    std::map<Name, place> alphabetical_;
 
 };
 

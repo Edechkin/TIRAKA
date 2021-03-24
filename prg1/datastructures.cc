@@ -59,9 +59,10 @@ std::vector<PlaceID> Datastructures::all_places()
 
 bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coord xy)
 {
-    place newPlace = {name, type, xy};
+    place newPlace = {name, type, xy, id};
     if (places_.find(id) == places_.end()) {
         places_.insert({id, newPlace});
+        alphabetical_.insert({name, newPlace});
         //everyPlaceId_.push_back(id);
         return true;
     }
@@ -130,17 +131,20 @@ void Datastructures::creation_finished()
 std::vector<PlaceID> Datastructures::places_alphabetically()
 {
     //std::pair<PlaceID, Name> vittu;
-    std::vector<std::pair<PlaceID, Name>> support = {};
-    std::vector<PlaceID> alphabetical_order = {};
+    std::vector<PlaceID> support = {};
+    //std::vector<PlaceID> alphabetical_order = {};
     if (places_.empty()){
     return {};
     }
-    for (auto& id : places_){
-        //vittu = std::make_pair(id, id.second.name);
-        //std::pair<PlaceID, Name> vittu (id, id.second.name);
+    for ( auto const& pair : alphabetical_){
+        auto id = pair.second.id;
+        support.push_back(id);
+       // std::pair<PlaceID, Name> vittu;
+        //vittu = std::make_pair( id, id.second.name);
         //std::cout << id.first << std::endl;
         //support.push_back(vittu);
     }
+    return support;
 }
 
 std::vector<PlaceID> Datastructures::places_coord_order()
@@ -239,8 +243,15 @@ std::vector<PlaceID> Datastructures::places_closest_to(Coord xy, PlaceType type)
 
 bool Datastructures::remove_place(PlaceID id)
 {
-    // Replace this comment with your implementation
-    return false;
+    if (places_.find(id) == places_.end()) {
+        return false;
+    }
+    else {
+        Name name = places_.at(id).name;
+        places_.erase(id);
+        alphabetical_.erase(name);
+        return true;
+    }
 }
 
 std::vector<AreaID> Datastructures::all_subareas_in_area(AreaID id)
