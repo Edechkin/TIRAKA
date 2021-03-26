@@ -196,13 +196,15 @@ private:
     struct area{
         Name name;
         std::vector<Coord> coords;
-        std::vector<AreaID> sub_areas = {};
-        AreaID super_area = NO_AREA;
+        std::vector<AreaID> sub_areas;
+        AreaID super_area;
 
     };
     std::unordered_map<AreaID, struct area> areas_;
 
     std::vector<AreaID> recursive_sub_area_in_areas(AreaID, std::vector<AreaID>&);
+
+    std::vector<AreaID> recursive_all_sub_areas_in_area(AreaID, std::vector<AreaID>&);
 
   //  std::vector<AreaID> super_areas_;
 

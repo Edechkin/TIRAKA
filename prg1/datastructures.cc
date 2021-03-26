@@ -298,8 +298,18 @@ bool Datastructures::remove_place(PlaceID id)
 
 std::vector<AreaID> Datastructures::all_subareas_in_area(AreaID id)
 {
-    // Replace this comment with your implementation
-    return {NO_AREA};
+    if (areas_.find(id) == areas_.end()){
+        return {NO_AREA};
+    }
+    else if (areas_.at(id).sub_areas.empty()) {
+        return {NO_AREA};
+    }
+
+    else {
+        std::vector<PlaceID> sub_areas = {};
+        recursive_all_sub_areas_in_area(id, sub_areas);
+        return sub_areas;
+    }
 }
 
 AreaID Datastructures::common_area_of_subareas(AreaID id1, AreaID id2)
@@ -322,6 +332,31 @@ std::vector<AreaID> Datastructures::recursive_sub_area_in_areas(AreaID id, std::
     }
 }
 
+std::vector<AreaID> Datastructures::recursive_all_sub_areas_in_area(AreaID id, std::vector<AreaID> &subareas)
+{
+    if (areas_.at(id).sub_areas.empty()) {
+        return subareas;
+    }
+
+    for (AreaID sub : areas_.at(id).sub_areas){
+        subareas.push_back(sub);
+        recursive_all_sub_areas_in_area(sub, subareas);
+
+    }
+    return subareas;
+    /*for (AreaID id : subareas){
+        return recursive_all_sub_areas_in_area(id, subareas);
+    }
+    */
+       /* AreaID tmp = areas_.at(id).super_area;
+        subareas.push_back(tmp);
+        return recursive_sub_area_in_areas(tmp, subareas);
+    }*/
+
+
+
+}
+
 /*bool Datastructures::coord_order_support(Coord const a, Coord const b)
 {
     int x1 = a.x;
@@ -338,3 +373,4 @@ std::vector<AreaID> Datastructures::recursive_sub_area_in_areas(AreaID id, std::
     }
 }
 */
+
