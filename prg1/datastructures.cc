@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+#include <cmath>
+
 
 std::minstd_rand rand_engine; // Reasonably quick pseudo-random generator
 
@@ -62,7 +64,7 @@ bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coo
     place newPlace = {name, type, xy, id};
     if (places_.find(id) == places_.end()) {
         places_.insert({id, newPlace});
-        alphabetical_.insert({name, newPlace});
+        //alphabetical_.insert({name, newPlace});
         //everyPlaceId_.push_back(id);
         return true;
     }
@@ -131,27 +133,61 @@ void Datastructures::creation_finished()
 std::vector<PlaceID> Datastructures::places_alphabetically()
 {
     //std::pair<PlaceID, Name> vittu;
-    std::vector<PlaceID> support = {};
     //std::vector<PlaceID> alphabetical_order = {};
     if (places_.empty()){
-    return {};
+        return {};
     }
-    for ( auto const& pair : alphabetical_){
+    /*for ( auto const& pair : alphabetical_){
         auto id = pair.second.id;
         support.push_back(id);
        // std::pair<PlaceID, Name> vittu;
         //vittu = std::make_pair( id, id.second.name);
         //std::cout << id.first << std::endl;
         //support.push_back(vittu);
+    }*/
+    std::vector<std::pair<Name, PlaceID>> tmp = {};
+    std::vector<PlaceID> alphabetical = {};
+    for (auto pair : places_) {
+        tmp.push_back(std::make_pair( pair.second.name, pair.first));
     }
-    return support;
+    sort(tmp.begin(), tmp.end());
+    for (auto i : tmp) {
+        alphabetical.push_back(i.second);
+    }
+    return alphabetical;
+
 }
 
 std::vector<PlaceID> Datastructures::places_coord_order()
 {
-    // Replace this comment with your implementation
-    return {};
+    if (places_.empty())
+        return {};
+    else {
+        std::vector<std::pair<Coord, PlaceID>> tmp = {};
+        std::vector<PlaceID> coord_order = {};
+        for (auto pair : places_) {
+            tmp.push_back(std::make_pair( pair.second.xy, pair.first));
+        }
+
+        sort(tmp.begin(), tmp.end(),
+             [](std::pair<Coord, PlaceID> a, std::pair<Coord, PlaceID> b)->bool
+        {int da = sqrt(pow(a.first.x,2)+pow(a.first.y,2));
+         int db = sqrt(pow(b.first.x,2)+pow(b.first.y,2));
+         if ( da == db) {
+             return a.first.y < b.first.y;
+         }
+         else{
+             return da < db;}
+        });
+        for (auto i : tmp) {
+            coord_order.push_back(i.second);
+        }
+        return coord_order;
+
+    }
+
 }
+
 
 std::vector<PlaceID> Datastructures::find_places_name(Name const& name)
 {
@@ -181,7 +217,13 @@ bool Datastructures::change_place_name(PlaceID id, const Name& newname)
         return false;
     }
     else {
+        Name name = places_.at(id).name;
+        Name tmp = newname;
         places_.at(id).name = newname;
+       // alphabetical_.insert({tmp, places_.at(id)});
+       // alphabetical_.erase(name);
+
+
         return true;
     }
 }
@@ -229,9 +271,9 @@ std::vector<AreaID> Datastructures::subarea_in_areas(AreaID id)
         return {NO_AREA};
     }
     else {
-        super_areas_ = {};
-        recursive_sub_area_in_areas(id, super_areas_);
-        return super_areas_;
+        std::vector<PlaceID> super_areas = {};
+        recursive_sub_area_in_areas(id, super_areas);
+        return super_areas;
     }
 }
 
@@ -249,7 +291,7 @@ bool Datastructures::remove_place(PlaceID id)
     else {
         Name name = places_.at(id).name;
         places_.erase(id);
-        alphabetical_.erase(name);
+       // alphabetical_.erase(name);
         return true;
     }
 }
@@ -279,3 +321,20 @@ std::vector<AreaID> Datastructures::recursive_sub_area_in_areas(AreaID id, std::
         return recursive_sub_area_in_areas(ptr, superareas);
     }
 }
+
+/*bool Datastructures::coord_order_support(Coord const a, Coord const b)
+{
+    int x1 = a.x;
+    int y1 = a.y;
+    int x2 = b.x;
+    int y2 = b.y;
+    int c = sqrt(pow(x1,2)+pow(y1,2));
+    int d = sqrt(pow(x2,2)+pow(y2,2));
+    if (c == d){
+        return y1 < y2;
+    }
+    else {
+        return c < d;
+    }
+}
+*/

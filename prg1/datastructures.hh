@@ -204,9 +204,11 @@ private:
 
     std::vector<AreaID> recursive_sub_area_in_areas(AreaID, std::vector<AreaID>&);
 
-    std::vector<AreaID> super_areas_;
+  //  std::vector<AreaID> super_areas_;
 
-    std::map<Name, place> alphabetical_;
+  //  std::map<Name, place> alphabetical_;
+
+   // bool coord_order_support(Coord const, Coord const);
 
 };
 
