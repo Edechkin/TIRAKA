@@ -279,9 +279,57 @@ std::vector<AreaID> Datastructures::subarea_in_areas(AreaID id)
 
 std::vector<PlaceID> Datastructures::places_closest_to(Coord xy, PlaceType type)
 {
-    // Replace this comment with your implementation
-    return {};
+    if (places_.empty()){
+        return {NO_PLACE};
+    }
+
+
+        struct p{
+            int dist;
+            PlaceID id;
+            int c;
+
+        };
+        std::vector<struct p> tmp = {};
+        std::vector<PlaceID> closest = {};
+        for (auto pair : places_){
+            if ( type != PlaceType::NO_TYPE){
+                if (type == pair.second.type){
+
+                int dist = sqrt(pow((pair.second.xy.x-xy.x),2)+pow((pair.second.xy.y-xy.y),2));
+                p help = {dist, pair.first, pair.second.xy.y};
+                tmp.push_back(help);
+                }
+            }
+            else {
+                int dist = sqrt(pow((pair.second.xy.x-xy.x),2)+pow((pair.second.xy.y-xy.y),2));
+                p help = {dist, pair.first, pair.second.xy.y};
+                tmp.push_back(help);
+            }
+        }
+        sort(tmp.begin(), tmp.end(),
+             [](p a, p b){
+            if (a.dist == b.dist) {
+                return a.c < b.c;
+            }
+            return a.dist < b.dist;
+            });
+    if (tmp.size() == 1){
+        closest.push_back(tmp.at(0).id);
+    }
+    else if (tmp.size() == 2){
+        closest.push_back(tmp.at(0).id);
+        closest.push_back(tmp.at(1).id);
+    }
+    else {
+        closest.push_back(tmp.at(0).id);
+        closest.push_back(tmp.at(1).id);
+        closest.push_back(tmp.at(2).id);
+    }
+    return closest;
+
 }
+
 
 bool Datastructures::remove_place(PlaceID id)
 {
