@@ -47,7 +47,7 @@ int Datastructures::place_count()
 void Datastructures::clear_all()
 {
     places_.clear();
-    // Clear areas also!
+    areas_.clear();
 }
 
 std::vector<PlaceID> Datastructures::all_places()
@@ -61,11 +61,9 @@ std::vector<PlaceID> Datastructures::all_places()
 
 bool Datastructures::add_place(PlaceID id, const Name& name, PlaceType type, Coord xy)
 {
-    place newPlace = {name, type, xy, id};
+    place newPlace = {name, type, xy};
     if (places_.find(id) == places_.end()) {
         places_.insert({id, newPlace});
-        //alphabetical_.insert({name, newPlace});
-        //everyPlaceId_.push_back(id);
         return true;
     }
     return false;
@@ -132,19 +130,10 @@ void Datastructures::creation_finished()
 
 std::vector<PlaceID> Datastructures::places_alphabetically()
 {
-    //std::pair<PlaceID, Name> vittu;
-    //std::vector<PlaceID> alphabetical_order = {};
     if (places_.empty()){
         return {};
     }
-    /*for ( auto const& pair : alphabetical_){
-        auto id = pair.second.id;
-        support.push_back(id);
-       // std::pair<PlaceID, Name> vittu;
-        //vittu = std::make_pair( id, id.second.name);
-        //std::cout << id.first << std::endl;
-        //support.push_back(vittu);
-    }*/
+
     std::vector<std::pair<Name, PlaceID>> tmp = {};
     std::vector<PlaceID> alphabetical = {};
     for (auto pair : places_) {
@@ -220,10 +209,6 @@ bool Datastructures::change_place_name(PlaceID id, const Name& newname)
         Name name = places_.at(id).name;
         Name tmp = newname;
         places_.at(id).name = newname;
-       // alphabetical_.insert({tmp, places_.at(id)});
-       // alphabetical_.erase(name);
-
-
         return true;
     }
 }
@@ -292,19 +277,20 @@ std::vector<PlaceID> Datastructures::places_closest_to(Coord xy, PlaceType type)
         };
         std::vector<struct p> tmp = {};
         std::vector<PlaceID> closest = {};
-        for (auto pair : places_){
-            if ( type != PlaceType::NO_TYPE){
-                if (type == pair.second.type){
-
+        if ( type == PlaceType::NO_TYPE){
+            for (auto pair : places_){
                 int dist = sqrt(pow((pair.second.xy.x-xy.x),2)+pow((pair.second.xy.y-xy.y),2));
                 p help = {dist, pair.first, pair.second.xy.y};
                 tmp.push_back(help);
-                }
             }
-            else {
-                int dist = sqrt(pow((pair.second.xy.x-xy.x),2)+pow((pair.second.xy.y-xy.y),2));
-                p help = {dist, pair.first, pair.second.xy.y};
-                tmp.push_back(help);
+        }
+        else {
+            for (auto pair : places_){
+                if(type == pair.second.type){
+                    int dist = sqrt(pow((pair.second.xy.x-xy.x),2)+pow((pair.second.xy.y-xy.y),2));
+                    p help = {dist, pair.first, pair.second.xy.y};
+                    tmp.push_back(help);
+                }
             }
         }
         sort(tmp.begin(), tmp.end(),
@@ -339,7 +325,6 @@ bool Datastructures::remove_place(PlaceID id)
     else {
         Name name = places_.at(id).name;
         places_.erase(id);
-       // alphabetical_.erase(name);
         return true;
     }
 }
@@ -362,8 +347,24 @@ std::vector<AreaID> Datastructures::all_subareas_in_area(AreaID id)
 
 AreaID Datastructures::common_area_of_subareas(AreaID id1, AreaID id2)
 {
-    // Replace this comment with your implementation
-    return NO_AREA;
+    return {};
+   /*if (areas_.find(id1) == areas_.end() || areas_.find(id2) == areas_.end()){
+       return NO_AREA;
+   }
+   if (areas_.at(id1).super_area == NO_AREA || areas_.at(id2).super_area == NO_AREA) {
+       return NO_AREA;
+   }
+   AreaID tmp1 = id1;
+   AreaID tmp2 = id2;
+   while (areas_.at(tmp1).super_area != NO_AREA){
+       AreaID sup_id1 = areas_.at(tmp1).super_area;
+       AreaID sup_id2 = areas_.at(tmp2).super_area;
+       if (sup_id1 == sup_id2){
+
+       }
+   }
+
+*/
 }
 
 std::vector<AreaID> Datastructures::recursive_sub_area_in_areas(AreaID id, std::vector<AreaID> &superareas)
@@ -392,33 +393,7 @@ std::vector<AreaID> Datastructures::recursive_all_sub_areas_in_area(AreaID id, s
 
     }
     return subareas;
-    /*for (AreaID id : subareas){
-        return recursive_all_sub_areas_in_area(id, subareas);
-    }
-    */
-       /* AreaID tmp = areas_.at(id).super_area;
-        subareas.push_back(tmp);
-        return recursive_sub_area_in_areas(tmp, subareas);
-    }*/
-
-
 
 }
 
-/*bool Datastructures::coord_order_support(Coord const a, Coord const b)
-{
-    int x1 = a.x;
-    int y1 = a.y;
-    int x2 = b.x;
-    int y2 = b.y;
-    int c = sqrt(pow(x1,2)+pow(y1,2));
-    int d = sqrt(pow(x2,2)+pow(y2,2));
-    if (c == d){
-        return y1 < y2;
-    }
-    else {
-        return c < d;
-    }
-}
-*/
 

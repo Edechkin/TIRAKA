@@ -85,98 +85,98 @@ public:
     Datastructures();
     ~Datastructures();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: Theta(1)
+    // Short rationale for estimate: Se vaan on, pitää kaiketi kirjaa omasta koostaan.
     int place_count();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: Theta(n)
+    // Short rationale for estimate: Kutsuu jokaisen elementin purkajaa
     void clear_all();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: Theta(n)
+    // Short rationale for estimate: Käydään elementit läpi yksi kerrallaan.
     std::vector<PlaceID> all_places();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: find ja insert molemmat keskimäärin vakioaikaisia ja huonoimmillaan lineaarisia. Ei luuppeja.
     bool add_place(PlaceID id, Name const& name, PlaceType type, Coord xy);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: Find keskimäärin vakioaikainen, huonoimmillaan lineaarinen ja at-funktioon pätee sama.
     std::pair<Name, PlaceType> get_place_name_type(PlaceID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: Find ja at -funktiot keskimäärin vakioaikaisia, huonoimmillaan lineaarisia.
     Coord get_place_coord(PlaceID id);
 
     // We recommend you implement the operations below only after implementing the ones above
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n log(n))
+    // Short rationale for estimate: sort-funktion kompleksisuus
     std::vector<PlaceID> places_alphabetically();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n log(n))
+    // Short rationale for estimate: sort-funktion kompleksisuus
     std::vector<PlaceID> places_coord_order();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: Theta(n)
+    // Short rationale for estimate: Käydään places_-rakennette elementti kerrallaan läpi
     std::vector<PlaceID> find_places_name(Name const& name);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: Theta(n)
+    // Short rationale for estimate: Käydään places_-rakennette elementti kerrallaan läpi
     std::vector<PlaceID> find_places_type(PlaceType type);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: Find ja at -funktiot keskimäärin vakioaikaisia, huonoimmillaan lineaarisia
     bool change_place_name(PlaceID id, Name const& newname);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: Find ja at -funktiot keskimäärin vakioaikaisia, huonoimmillaan lineaarisia
     bool change_place_coord(PlaceID id, Coord newcoord);
 
     // We recommend you implement the operations below only after implementing the ones above
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate:Find ja Insert -funktiot keskimäärin vakioaikaisia, huonoimmillaan lineaarisia
     bool add_area(AreaID id, Name const& name, std::vector<Coord> coords);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: Find ja at -funktiot keskimäärin vakioaikaisia, huonoimmillaan lineaarisia
     Name get_area_name(AreaID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: Find ja at -funktiot keskimäärin vakioaikaisia, huonoimmillaan lineaarisia
     std::vector<Coord> get_area_coords(AreaID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: Theta(n)
+    // Short rationale for estimate: Käydään areas_-rakenne läpi elementti kerrallaan
     std::vector<AreaID> all_areas();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: Find ja at -funktiot keskimäärin vakioaikaisia, huonoimmillaan lineaarisia
     bool add_subarea_to_area(AreaID id, AreaID parentid);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: Rekursiivisen funktion kutsujen määrä riippuu alueen "ylialueiden" määrästä. Lisäksi at-funktio huonoimmillaan lineaarinen
     std::vector<AreaID> subarea_in_areas(AreaID id);
 
     // Non-compulsory operations
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: Theta(1)
+    // Short rationale for estimate: Ei toteutusta
     void creation_finished();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: Rekursiivisen funktion kutsujen määrä riippuu alialueiden määrästä. Find ja at huonoimillaan lineaarisia, alialuevekotreita käydöön elementti kerrallaan.
     std::vector<AreaID> all_subareas_in_area(AreaID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n log(n))
+    // Short rationale for estimate: Vectorin sorttaus on O(n log(n)), sen lisäksi suoritetaan huonoimmillaan lineaarisia toimenpiteitä.
     std::vector<PlaceID> places_closest_to(Coord xy, PlaceType type);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keksimäärin Theta(1)
+    // Short rationale for estimate: Find, at ja erase kaikki keskimäärin vakioaikaisia, huonoimmillaan lineaarisia.
     bool remove_place(PlaceID id);
 
     // Estimate of performance:
@@ -189,10 +189,8 @@ private:
         Name name;
         PlaceType type;
         Coord xy;
-        PlaceID id;
     };
     std::unordered_map<PlaceID, struct place> places_;
-    //std::vector<PlaceID> everyPlaceId_;
     struct area{
         Name name;
         std::vector<Coord> coords;
@@ -206,11 +204,6 @@ private:
 
     std::vector<AreaID> recursive_all_sub_areas_in_area(AreaID, std::vector<AreaID>&);
 
-  //  std::vector<AreaID> super_areas_;
-
-  //  std::map<Name, place> alphabetical_;
-
-   // bool coord_order_support(Coord const, Coord const);
 
 };
 
