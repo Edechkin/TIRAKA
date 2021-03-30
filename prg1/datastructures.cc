@@ -347,7 +347,6 @@ std::vector<AreaID> Datastructures::all_subareas_in_area(AreaID id)
 
 AreaID Datastructures::common_area_of_subareas(AreaID id1, AreaID id2)
 {
-   //int SUP = -1;
    if (areas_.find(id1) == areas_.end() || areas_.find(id2) == areas_.end()){
        return NO_AREA;
    }
@@ -385,12 +384,8 @@ AreaID Datastructures::common_area_of_subareas(AreaID id1, AreaID id2)
    }
    else {
        int iter = 0;
-       int test = v2.size();
        while (iter < (v2.size())) {
            if (v1.at(iter) == v2.at(iter)){
-               /*if (iter == 1){
-                   return NO_AREA;
-               }*/
                return v1.at(iter);
            }
            iter += 1;

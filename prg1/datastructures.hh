@@ -179,8 +179,8 @@ public:
     // Short rationale for estimate: Find, at ja erase kaikki keskimäärin vakioaikaisia, huonoimmillaan lineaarisia.
     bool remove_place(PlaceID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: Findit ja vektorien iteroiminen huonoimmillaan O(n)
     AreaID common_area_of_subareas(AreaID id1, AreaID id2);
 
 private:
