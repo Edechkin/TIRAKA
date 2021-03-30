@@ -347,24 +347,58 @@ std::vector<AreaID> Datastructures::all_subareas_in_area(AreaID id)
 
 AreaID Datastructures::common_area_of_subareas(AreaID id1, AreaID id2)
 {
-    return {};
-   /*if (areas_.find(id1) == areas_.end() || areas_.find(id2) == areas_.end()){
+   //int SUP = -1;
+   if (areas_.find(id1) == areas_.end() || areas_.find(id2) == areas_.end()){
        return NO_AREA;
    }
-   if (areas_.at(id1).super_area == NO_AREA || areas_.at(id2).super_area == NO_AREA) {
+   std::vector<AreaID> v1 = subarea_in_areas(id1);
+   std::vector<AreaID> v2 = subarea_in_areas(id2);
+   if (v1.empty() || v2.empty()){
        return NO_AREA;
+
    }
-   AreaID tmp1 = id1;
-   AreaID tmp2 = id2;
-   while (areas_.at(tmp1).super_area != NO_AREA){
-       AreaID sup_id1 = areas_.at(tmp1).super_area;
-       AreaID sup_id2 = areas_.at(tmp2).super_area;
-       if (sup_id1 == sup_id2){
+   if (v1.size() < v2.size()) {
+        int iter1 = 0;
+        int iter2 = v2.size() - v1.size();
+        while (iter1 < (v1.size())) {
+            if (v1.at(iter1) == v2.at(iter2)){
+                return v1.at(iter1);
+            }
+            iter1 += 1;
+            iter2 += 1;
+
+        }
+        return NO_AREA;
+   }
+   else if (v1.size() > v2.size()) {
+       int iter2 = 0;
+       int iter1 = v1.size() - v2.size();
+       while (iter2 < (v2.size())) {
+           if (v1.at(iter1) == v2.at(iter2)){
+               return v1.at(iter1);
+           }
+           iter1 += 1;
+           iter2 += 1;
 
        }
+       return NO_AREA;
+   }
+   else {
+       int iter = 0;
+       int test = v2.size();
+       while (iter < (v2.size())) {
+           if (v1.at(iter) == v2.at(iter)){
+               /*if (iter == 1){
+                   return NO_AREA;
+               }*/
+               return v1.at(iter);
+           }
+           iter += 1;
+
+       }
+       return NO_AREA;
    }
 
-*/
 }
 
 std::vector<AreaID> Datastructures::recursive_sub_area_in_areas(AreaID id, std::vector<AreaID> &superareas)
