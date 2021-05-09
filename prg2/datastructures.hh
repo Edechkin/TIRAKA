@@ -232,6 +232,39 @@ public:
 
 private:
     // Add stuff needed for your class implementation here
+    struct place{
+        Name name;
+        PlaceType type;
+        Coord xy;
+    };
+    std::unordered_map<PlaceID, struct place> places_;
+    struct area{
+        Name name;
+        std::vector<Coord> coords;
+        std::vector<AreaID> sub_areas;
+        AreaID super_area;
+
+    };
+    std::unordered_map<AreaID, struct area> areas_;
+
+    std::vector<AreaID> recursive_sub_area_in_areas(AreaID, std::vector<AreaID>&);
+
+    std::vector<AreaID> recursive_all_sub_areas_in_area(AreaID, std::vector<AreaID>&);
+
+    struct way{
+        std::vector<Coord> coord_vec;
+        Coord begin;
+        Coord end;
+        Distance length;
+    };
+
+    std::unordered_map<WayID, struct way> ways_;
+
+    Distance get_distance(std::vector<Coord> coords);
+
+    Distance euclidian_distance(Coord, Coord);
+
+    std::unordered_map<Coord, WayID, CoordHash> crossroads_;
 
 };
 
