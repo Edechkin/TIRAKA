@@ -9,6 +9,7 @@
 #include <utility>
 #include <limits>
 #include <functional>
+#include <cmath>
 
 // Types for IDs
 using PlaceID = long long int;
@@ -265,6 +266,8 @@ private:
     Distance euclidian_distance(Coord, Coord);
 
     std::unordered_map<Coord, WayID, CoordHash> crossroads_;
+
+    struct crossroad{};
 
 };
 

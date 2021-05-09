@@ -490,13 +490,27 @@ std::vector<std::pair<WayID, Coord>> Datastructures::ways_from(Coord xy)
         return {{NO_WAY, NO_COORD}};
     }
     std::vector<std::pair<WayID, Coord>> tmp = {};
-    for (const auto& i : crossroads_){
+    /*for (const auto& i : crossroads_){
         WayID id = i.second;
         Coord end_coord = ways_.at(id).end;
-        if (end_coord == xy){
-            end_coord = ways_.at(id).begin;
-        }
+        Coord begin_coord = ways_.at(id).begin;
+        if (end_coord == xy || begin_coord == xy){
+            if (end_coord == xy){
+                end_coord = begin_coord;
+            }
         tmp.push_back(std::make_pair(id, end_coord));
+        }
+    }*/
+    for (const auto& i : ways_ ){
+        Coord b = i.second.begin;
+        Coord e = i.second.end;
+
+        if (b == xy){
+            tmp.push_back(std::make_pair(i.first, e));
+        }
+        else if (e == xy){
+            tmp.push_back(std::make_pair(i.first, b));
+        }
     }
     return tmp;
 }
