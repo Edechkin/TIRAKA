@@ -480,7 +480,12 @@ bool Datastructures::add_way(WayID id, std::vector<Coord> coords)
     Coord e = coords.at(size-1);
     way new_way = {coords, b, e, d};
     ways_.insert({id, new_way});
+   /* if (crossroads_.find(b) != crossroads_.end()){
+        if (crossroads_.find(e) != crossroads_.end())
+    }*/
+
     crossroads_.insert({b, id});
+    crossroads_.insert({e, id});
     return true;
 }
 
@@ -531,9 +536,45 @@ void Datastructures::clear_ways()
 
 std::vector<std::tuple<Coord, WayID, Distance> > Datastructures::route_any(Coord fromxy, Coord toxy)
 {
-    // Replace this comment with your implementation
-    return {{NO_COORD, NO_WAY, NO_DISTANCE}};
-}
+    if (crossroads_.find(fromxy) == crossroads_.end() || crossroads_.find(toxy) == crossroads_.end() ){
+        return {{NO_COORD, NO_WAY, NO_DISTANCE}};
+    }
+    std::deque<Coord> path = Datastructures::bfs(fromxy, toxy);
+    int length = path.size();
+
+        std::vector<int> distances;
+        //int db = euclidian_distance(path.at(0), path.at(1));
+        int prev = 0;
+        for (int i = 1; i < length; i++){
+            int d = euclidian_distance(path.at(prev), path.at(i));
+            distances.push_back(d);
+            prev += 1;
+        }
+        int sum = 0;
+        int h = 0;
+        int a = 0;
+        int b = 1;
+        std::tuple<Coord, WayID, Distance> cros;
+        std::vector<std::tuple<Coord, WayID, Distance> > result;
+        WayID dummy = "Aa0";
+        for (auto const &coord : path){
+            if (h == 0){
+                cros = {coord, dummy, sum};
+                h = 1;
+            }
+            else if(b == length){
+                cros = {coord, NO_WAY, sum};
+            }
+            else{
+                sum += distances.at(a);
+                a++;
+                b++;
+                cros = {coord, dummy, sum};
+            }
+            result.push_back(cros);
+        }
+        return result;
+    }
 
 bool Datastructures::remove_way(WayID id)
 {
@@ -541,11 +582,54 @@ bool Datastructures::remove_way(WayID id)
     return false;
 }
 
+std::deque<Coord> Datastructures::bfs(Coord start, Coord end)
+{
+    /*std::deque<Coord> to_do ={};
+    std::unordered_map<Coord, std::vector<Coord>, CoordHash> done;
+    to_do.push_back(start);
+    while (to_do.size() > 0) {
+        Coord u = to_do.front();
+        to_do.pop_front();
+        std::vector<std::pair<WayID, Coord>> tmp = ways_from(u);
+        for (auto& i : tmp){
+            Coord v = i.second;
+            if (done.find(i.second) == done.end()){
+                to_do.push_back(v);
+            }
+            done.at(u).push_back(v);
+        }
+    }*/
+    std::deque<std::deque<Coord>> to_do ={};
+    std::deque<Coord> tmp;
+    tmp.push_back(start);
+    to_do.push_back(tmp);
+    while (to_do.size() > 0){
+        std::deque<Coord> path;
+        path = to_do.front();
+        to_do.pop_front();
+        Coord node = path.back();
+        if (node == end){
+            return path;
+        }
+        std::vector<std::pair<WayID, Coord>> sup = ways_from(node);
+        for (auto& adjacent : sup){
+            std::deque<Coord> new_path = path;
+            new_path.push_back(adjacent.second);
+            to_do.push_back(new_path);
+        }
+
+    }
+    return {NO_COORD};
+
+
+}
+
 std::vector<std::tuple<Coord, WayID, Distance> > Datastructures::route_least_crossroads(Coord fromxy, Coord toxy)
 {
-    // Replace this comment with your implementation
     return {{NO_COORD, NO_WAY, NO_DISTANCE}};
 }
+
+
 
 std::vector<std::tuple<Coord, WayID> > Datastructures::route_with_cycle(Coord fromxy)
 {
