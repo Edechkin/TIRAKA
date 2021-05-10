@@ -187,28 +187,28 @@ public:
 
     // Phase 2 operations
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: Käydään vektorin alkiot läpi.
     std::vector<WayID> all_ways();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: find ja insert molemmat keskimäärin vakioaikaisia ja huonoimmillaan lineaarisia. Ei luuppeja.
     bool add_way(WayID id, std::vector<Coord> coords);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n)
+    // Short rationale for estimate: Käydään unordered_mapin alkioita läpi
     std::vector<std::pair<WayID, Coord>> ways_from(Coord xy);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(n), keskimäärin Theta(1)
+    // Short rationale for estimate: find ja .at keksimäärin vakioaikaisia, huonommillaan lineaarisia
     std::vector<Coord> get_way_coords(WayID id);
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: Theta(n)
+    // Short rationale for estimate: Käy kaikkien alkioiden purkajat läpi.
     void clear_ways();
 
-    // Estimate of performance:
-    // Short rationale for estimate:
+    // Estimate of performance: O(V+E)
+    // Short rationale for estimate: BFS:n (jota käytetään tässä) tehokkuus on O(V+E). Lisäksi iteroidaan listan läpi, muutenkin varmaan aika hidas kun paljon erilaisia operaatioita.
     std::vector<std::tuple<Coord, WayID, Distance>> route_any(Coord fromxy, Coord toxy);
 
     // Non-compulsory operations
@@ -263,13 +263,11 @@ private:
 
     std::unordered_map<WayID, struct way> ways_;
 
-    Distance get_distance(std::vector<Coord> coords);
+    std::unordered_map<Coord, WayID, CoordHash> crossroads_;
 
     Distance euclidian_distance(Coord, Coord);
 
-    std::unordered_map<Coord, WayID, CoordHash> crossroads_;
-
-    struct crossroad{};
+    Distance get_distance(std::vector<Coord> coords);
 
     std::deque<Coord> bfs(Coord, Coord);
 

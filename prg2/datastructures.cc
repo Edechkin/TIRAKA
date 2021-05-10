@@ -420,45 +420,7 @@ std::vector<AreaID> Datastructures::recursive_all_sub_areas_in_area(AreaID id, s
 
 }
 
-Distance Datastructures::get_distance(std::vector<Coord> coords)
-{
-    unsigned int size = coords.size();
-    Distance dist = 0;
 
-
-
-    if (size == 1){
-        return dist;
-    }
-    else if (size == 2) {
-        dist = euclidian_distance(coords.at(0), coords.at(1));
-        return dist;
-    }
-    else {
-        Coord prev = coords.at(0);
-        Coord curr;
-        for (unsigned int i = 1; i < size; i++){
-            curr = coords.at(i);
-            dist += euclidian_distance(prev, curr);
-            prev = curr;
-        }
-        return dist;
-    }
-}
-
-Distance Datastructures::euclidian_distance(Coord a, Coord b)
-{
-    int ax = a.x;
-    int bx = b.x;
-    int ay = a.y;
-    int by = b.y;
-    int x = bx - ax;
-    int y = by - ay;
-    Distance d = pow(x, 2) + pow(y, 2);
-    d = std::floor(sqrt(d));
-    return d;
-
-}
 
 std::vector<WayID> Datastructures::all_ways()
 {
@@ -480,10 +442,6 @@ bool Datastructures::add_way(WayID id, std::vector<Coord> coords)
     Coord e = coords.at(size-1);
     way new_way = {coords, b, e, d};
     ways_.insert({id, new_way});
-   /* if (crossroads_.find(b) != crossroads_.end()){
-        if (crossroads_.find(e) != crossroads_.end())
-    }*/
-
     crossroads_.insert({b, id});
     crossroads_.insert({e, id});
     return true;
@@ -495,17 +453,6 @@ std::vector<std::pair<WayID, Coord>> Datastructures::ways_from(Coord xy)
         return {{NO_WAY, NO_COORD}};
     }
     std::vector<std::pair<WayID, Coord>> tmp = {};
-    /*for (const auto& i : crossroads_){
-        WayID id = i.second;
-        Coord end_coord = ways_.at(id).end;
-        Coord begin_coord = ways_.at(id).begin;
-        if (end_coord == xy || begin_coord == xy){
-            if (end_coord == xy){
-                end_coord = begin_coord;
-            }
-        tmp.push_back(std::make_pair(id, end_coord));
-        }
-    }*/
     for (const auto& i : ways_ ){
         Coord b = i.second.begin;
         Coord e = i.second.end;
@@ -539,36 +486,33 @@ std::vector<std::tuple<Coord, WayID, Distance> > Datastructures::route_any(Coord
     if (crossroads_.find(fromxy) == crossroads_.end() || crossroads_.find(toxy) == crossroads_.end() ){
         return {{NO_COORD, NO_WAY, NO_DISTANCE}};
     }
-    std::deque<Coord> path = Datastructures::bfs(fromxy, toxy);
-    int length = path.size();
+    std::deque<Coord> route = Datastructures::bfs(fromxy, toxy);
+    int length = route.size();
 
         std::vector<int> distances;
-        //int db = euclidian_distance(path.at(0), path.at(1));
         int prev = 0;
         for (int i = 1; i < length; i++){
-            int d = euclidian_distance(path.at(prev), path.at(i));
+            int d = euclidian_distance(route.at(prev), route.at(i));
             distances.push_back(d);
             prev += 1;
         }
         int sum = 0;
         int h = 0;
         int a = 0;
-        int b = 1;
         std::tuple<Coord, WayID, Distance> cros;
         std::vector<std::tuple<Coord, WayID, Distance> > result;
         WayID dummy = "Aa0";
-        for (auto const &coord : path){
+        for (auto const &coord : route){
             if (h == 0){
                 cros = {coord, dummy, sum};
                 h = 1;
             }
-            else if(b == length){
+            else if(a == (length - 1)){
                 cros = {coord, NO_WAY, sum};
             }
             else{
                 sum += distances.at(a);
                 a++;
-                b++;
                 cros = {coord, dummy, sum};
             }
             result.push_back(cros);
@@ -582,53 +526,11 @@ bool Datastructures::remove_way(WayID id)
     return false;
 }
 
-std::deque<Coord> Datastructures::bfs(Coord start, Coord end)
-{
-    /*std::deque<Coord> to_do ={};
-    std::unordered_map<Coord, std::vector<Coord>, CoordHash> done;
-    to_do.push_back(start);
-    while (to_do.size() > 0) {
-        Coord u = to_do.front();
-        to_do.pop_front();
-        std::vector<std::pair<WayID, Coord>> tmp = ways_from(u);
-        for (auto& i : tmp){
-            Coord v = i.second;
-            if (done.find(i.second) == done.end()){
-                to_do.push_back(v);
-            }
-            done.at(u).push_back(v);
-        }
-    }*/
-    std::deque<std::deque<Coord>> to_do ={};
-    std::deque<Coord> tmp;
-    tmp.push_back(start);
-    to_do.push_back(tmp);
-    while (to_do.size() > 0){
-        std::deque<Coord> path;
-        path = to_do.front();
-        to_do.pop_front();
-        Coord node = path.back();
-        if (node == end){
-            return path;
-        }
-        std::vector<std::pair<WayID, Coord>> sup = ways_from(node);
-        for (auto& adjacent : sup){
-            std::deque<Coord> new_path = path;
-            new_path.push_back(adjacent.second);
-            to_do.push_back(new_path);
-        }
-
-    }
-    return {NO_COORD};
-
-
-}
 
 std::vector<std::tuple<Coord, WayID, Distance> > Datastructures::route_least_crossroads(Coord fromxy, Coord toxy)
 {
     return {{NO_COORD, NO_WAY, NO_DISTANCE}};
 }
-
 
 
 std::vector<std::tuple<Coord, WayID> > Datastructures::route_with_cycle(Coord fromxy)
@@ -647,4 +549,75 @@ Distance Datastructures::trim_ways()
 {
     // Replace this comment with your implementation
     return NO_DISTANCE;
+}
+
+    //OMAT APUFUNKTIOT:
+
+Distance Datastructures::euclidian_distance(Coord a, Coord b)
+{
+    int ax = a.x;
+    int bx = b.x;
+    int ay = a.y;
+    int by = b.y;
+    int x = bx - ax;
+    int y = by - ay;
+    Distance d = pow(x, 2) + pow(y, 2);
+    d = std::floor(sqrt(d));
+    return d;
+
+}
+
+
+Distance Datastructures::get_distance(std::vector<Coord> coords)
+{
+    unsigned int size = coords.size();
+    Distance dist = 0;
+
+
+
+    if (size == 1){
+        return dist;
+    }
+    else if (size == 2) {
+        dist = euclidian_distance(coords.at(0), coords.at(1));
+        return dist;
+    }
+    else {
+        Coord prev = coords.at(0);
+        Coord curr;
+        for (unsigned int i = 1; i < size; i++){
+            curr = coords.at(i);
+            dist += euclidian_distance(prev, curr);
+            prev = curr;
+        }
+        return dist;
+    }
+}
+
+
+/*Palauttaa reitin alku- ja loppupisteen väliltä, jos sellainen löytyy.
+ Reitti on lyhin mahdollinen solmujen määrässä mitattuna, ei huomio väylien pituuksia.*/
+std::deque<Coord> Datastructures::bfs(Coord start, Coord end)
+{
+    std::deque<std::deque<Coord>> routes ={};
+    std::deque<Coord> tmp;
+    tmp.push_back(start);
+    routes.push_back(tmp);
+    while (routes.size() > 0){
+        std::deque<Coord> route;
+        route = routes.front();
+        routes.pop_front();
+        Coord node = route.back();
+        if (node == end){
+            return route;
+        }
+        std::vector<std::pair<WayID, Coord>> sup = ways_from(node);
+        for (auto& adjacent : sup){
+            std::deque<Coord> new_route = route;
+            new_route.push_back(adjacent.second);
+            routes.push_back(new_route);
+        }
+
+    }
+    return {NO_COORD};
 }
